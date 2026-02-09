@@ -1,0 +1,1420 @@
+/* === RPG Dark Fantasy Theme === */
+
+:root {
+  /* 기본 색상 */
+  --bg-darkest: #0a0a0f;
+  --bg-dark: #12121a;
+  --bg-panel: #1a1a2e;
+  --bg-panel-hover: #222240;
+  --bg-slot: #0d0d1a;
+  --bg-slot-empty: #0a0a12;
+
+  /* 테두리 */
+  --border-gold: #c8a84e;
+  --border-gold-dim: #6b5a2e;
+  --border-bronze: #8b6914;
+  --border-iron: #4a4a5a;
+
+  /* 텍스트 */
+  --text-gold: #f0d060;
+  --text-light: #e0e0e0;
+  --text-dim: #8888aa;
+  --text-blue: #6b8cff;
+
+  /* 상태 색상 */
+  --hp-bar: #c0392b;
+  --hp-bar-bg: #3a1010;
+  --mp-bar: #2980b9;
+  --mp-bar-bg: #0a1a2a;
+  --exp-bar: #8e44ad;
+  --exp-bar-bg: #1a0a2a;
+  --active-green: #27ae60;
+  --warning-orange: #f39c12;
+
+  /* 이벤트 색상 */
+  --event-sword: #e74c3c;
+  --event-shield: #3498db;
+  --event-magic: #9b59b6;
+  --event-summon: #1abc9c;
+  --event-stop: #95a5a6;
+  --event-lightning: #f1c40f;
+
+  /* 글꼴 */
+  --font-title: 'MedievalSharp', 'Noto Sans KR', cursive;
+  --font-body: 'Noto Sans KR', sans-serif;
+
+  /* 그림자 */
+  --glow-gold: 0 0 10px rgba(200, 168, 78, 0.3);
+  --glow-blue: 0 0 10px rgba(107, 140, 255, 0.3);
+  --glow-green: 0 0 10px rgba(39, 174, 96, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-darkest);
+  color: var(--text-light);
+  overflow: hidden;
+  height: 100vh;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === 레이아웃 === */
+.rpg-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(26, 26, 46, 0.8) 0%, transparent 70%),
+    radial-gradient(ellipse at 80% 50%, rgba(13, 13, 26, 0.8) 0%, transparent 70%),
+    var(--bg-darkest);
+}
+
+/* === 상단 헤더 (금장 장식) === */
+.rpg-header {
+  background: linear-gradient(180deg, #2a1f0a 0%, #1a1505 100%);
+  border-bottom: 2px solid var(--border-gold);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 -1px 0 rgba(200, 168, 78, 0.2);
+  min-height: 56px;
+}
+
+.rpg-header__title {
+  font-family: var(--font-title);
+  font-size: 24px;
+  color: var(--text-gold);
+  text-shadow: 0 0 20px rgba(240, 208, 96, 0.4);
+  letter-spacing: 2px;
+}
+
+.rpg-header__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.rpg-header__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--active-green);
+  box-shadow: 0 0 8px rgba(39, 174, 96, 0.6);
+}
+
+.rpg-header__dot--off {
+  background: var(--event-sword);
+  box-shadow: 0 0 8px rgba(231, 76, 60, 0.6);
+}
+
+/* === 메인 콘텐츠 === */
+.rpg-main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* === 왼쪽 패널 (캐릭터 + 탭) === */
+.rpg-sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--bg-dark);
+  border-right: 1px solid var(--border-iron);
+  display: flex;
+  flex-direction: column;
+}
+
+/* === 캐릭터 카드 === */
+.char-card {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-iron);
+}
+
+.char-card__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  border: 2px solid var(--border-gold);
+  background: var(--bg-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 12px;
+  box-shadow: var(--glow-gold);
+}
+
+.char-card__name {
+  font-family: var(--font-title);
+  font-size: 20px;
+  color: var(--text-gold);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.char-card__title {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* === 스탯 바 === */
+.stat-bar {
+  margin-bottom: 8px;
+}
+
+.stat-bar__label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.stat-bar__label-name {
+  color: var(--text-dim);
+  font-weight: 700;
+}
+
+.stat-bar__label-value {
+  color: var(--text-dim);
+}
+
+.stat-bar__track {
+  height: 8px;
+  background: var(--hp-bar-bg);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-bar__fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.stat-bar__fill--hp {
+  background: linear-gradient(90deg, #c0392b, #e74c3c);
+  box-shadow: 0 0 8px rgba(192, 57, 43, 0.4);
+}
+
+.stat-bar__fill--mp {
+  background: linear-gradient(90deg, #2980b9, #3498db);
+  box-shadow: 0 0 8px rgba(41, 128, 185, 0.4);
+}
+
+.stat-bar__track--mp {
+  background: var(--mp-bar-bg);
+}
+
+.stat-bar__fill--exp {
+  background: linear-gradient(90deg, #8e44ad, #9b59b6);
+  box-shadow: 0 0 8px rgba(142, 68, 173, 0.4);
+}
+
+.stat-bar__track--exp {
+  background: var(--exp-bar-bg);
+}
+
+/* === 탭 네비게이션 === */
+.rpg-tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.rpg-tabs__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px;
+}
+
+.rpg-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rpg-tab:hover {
+  background: var(--bg-panel);
+  color: var(--text-light);
+}
+
+.rpg-tab--active {
+  background: var(--bg-panel);
+  border-color: var(--border-gold-dim);
+  color: var(--text-gold);
+  box-shadow: var(--glow-gold);
+}
+
+.rpg-tab__icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.rpg-tab__count {
+  margin-left: auto;
+  background: var(--bg-slot);
+  color: var(--text-blue);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* === 중앙 패널 (탭 콘텐츠) === */
+.rpg-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.rpg-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.rpg-content::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+.rpg-content::-webkit-scrollbar-thumb {
+  background: var(--border-iron);
+  border-radius: 3px;
+}
+
+/* === 패널 제목 === */
+.panel-title {
+  font-family: var(--font-title);
+  font-size: 22px;
+  color: var(--text-gold);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-gold-dim);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* === 카드 그리드 === */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* === 아이템 카드 === */
+.item-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-iron);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.item-card:hover {
+  border-color: var(--border-gold-dim);
+  box-shadow: var(--glow-gold);
+  transform: translateY(-1px);
+}
+
+.item-card--active {
+  border-color: var(--border-gold);
+  box-shadow: var(--glow-gold);
+}
+
+.item-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.item-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  border: 2px solid var(--border-bronze);
+  background: var(--bg-slot);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.item-card__icon--passive {
+  border-color: #8e44ad;
+  box-shadow: 0 0 8px rgba(142, 68, 173, 0.3);
+}
+
+.item-card__icon--active {
+  border-color: #e74c3c;
+  box-shadow: 0 0 8px rgba(231, 76, 60, 0.3);
+}
+
+.item-card__icon--enchant {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+}
+
+.item-card__icon--summon {
+  border-color: #1abc9c;
+  box-shadow: 0 0 8px rgba(26, 188, 156, 0.3);
+}
+
+.item-card__name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.item-card__scope {
+  font-size: 10px;
+  color: var(--text-dim);
+  background: var(--bg-slot);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 2px;
+  display: inline-block;
+}
+
+.item-card__desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.item-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.item-card__tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--bg-slot);
+  color: var(--text-blue);
+  border: 1px solid rgba(107, 140, 255, 0.2);
+}
+
+.item-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* === 버튼 === */
+.rpg-btn {
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border-iron);
+  background: var(--bg-slot);
+  color: var(--text-light);
+  font-size: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rpg-btn:hover {
+  border-color: var(--border-gold-dim);
+  background: var(--bg-panel-hover);
+}
+
+.rpg-btn--primary {
+  border-color: var(--border-gold);
+  color: var(--text-gold);
+}
+
+.rpg-btn--primary:hover {
+  background: rgba(200, 168, 78, 0.15);
+  box-shadow: var(--glow-gold);
+}
+
+.rpg-btn--danger {
+  border-color: #c0392b;
+  color: #e74c3c;
+}
+
+.rpg-btn--danger:hover {
+  background: rgba(192, 57, 43, 0.15);
+}
+
+.rpg-btn--cast {
+  border-color: var(--active-green);
+  color: var(--active-green);
+  font-weight: 700;
+}
+
+.rpg-btn--cast:hover {
+  background: rgba(39, 174, 96, 0.15);
+  box-shadow: var(--glow-green);
+}
+
+/* === 슬롯 그리드 === */
+.slot-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.slot {
+  width: 64px;
+  height: 64px;
+  border: 2px solid var(--border-iron);
+  border-radius: 8px;
+  background: var(--bg-slot-empty);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.slot--filled {
+  border-color: var(--border-bronze);
+  background: var(--bg-slot);
+}
+
+.slot--equipped {
+  border-color: var(--border-gold);
+  box-shadow: var(--glow-gold);
+}
+
+.slot:hover {
+  border-color: var(--border-gold-dim);
+  transform: scale(1.05);
+}
+
+.slot__level {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-gold);
+  border-radius: 4px;
+  padding: 0 4px;
+  font-size: 10px;
+  color: var(--text-blue);
+  font-weight: 700;
+}
+
+/* === 인챈트 이벤트 슬롯 === */
+.enchant-slot {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-iron);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.enchant-slot__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.enchant-slot__icon {
+  font-size: 20px;
+}
+
+.enchant-slot__name {
+  color: var(--text-light);
+}
+
+.enchant-slot__desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+
+.enchant-rune {
+  background: var(--bg-slot);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.enchant-rune__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.enchant-rune__command {
+  flex: 1;
+  color: var(--text-dim);
+  font-family: monospace;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.enchant-rune__matcher {
+  color: var(--text-blue);
+  font-size: 10px;
+  background: var(--bg-panel);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* === 소환수 상태 === */
+.summon-active {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-iron);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.summon-active__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.summon-active__icon {
+  font-size: 28px;
+}
+
+.summon-active__name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.summon-active__status {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.summon-hp {
+  height: 6px;
+  background: var(--bg-slot);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.summon-hp__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--event-summon), #2ecc71);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* === 소환수 도감 === */
+.bestiary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.bestiary-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-iron);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bestiary-entry:hover {
+  border-color: var(--border-gold-dim);
+  transform: translateY(-2px);
+}
+
+.bestiary-entry__icon {
+  font-size: 36px;
+}
+
+.bestiary-entry__name {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* === 오른쪽 패널 (전투 로그) === */
+.rpg-battle-log {
+  width: 340px;
+  min-width: 340px;
+  background: var(--bg-dark);
+  border-left: 1px solid var(--border-iron);
+  display: flex;
+  flex-direction: column;
+}
+
+.rpg-battle-log__header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-iron);
+  font-family: var(--font-title);
+  font-size: 16px;
+  color: var(--text-gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rpg-battle-log__list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.rpg-battle-log__list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.rpg-battle-log__list::-webkit-scrollbar-thumb {
+  background: var(--border-iron);
+  border-radius: 2px;
+}
+
+/* === 전투 로그 엔트리 === */
+.log-entry {
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-left: 3px solid transparent;
+  animation: log-slide-in 0.3s ease-out;
+}
+
+@keyframes log-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.log-entry--sword { border-left-color: var(--event-sword); }
+.log-entry--shield { border-left-color: var(--event-shield); }
+.log-entry--summon { border-left-color: var(--event-summon); }
+.log-entry--vanish { border-left-color: var(--event-stop); }
+.log-entry--lightning { border-left-color: var(--event-lightning); }
+.log-entry--skull { border-left-color: var(--event-stop); }
+.log-entry--config { border-left-color: var(--event-magic); }
+.log-entry--question { border-left-color: var(--text-dim); }
+
+.log-entry__time {
+  color: var(--text-dim);
+  font-size: 10px;
+  font-family: monospace;
+}
+
+.log-entry__icon {
+  margin-right: 6px;
+}
+
+.log-entry__message {
+  color: var(--text-light);
+}
+
+/* === 빈 상태 === */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-dim);
+}
+
+.empty-state__icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+.empty-state__text {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.empty-state__sub {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* === 퀵슬롯 바 === */
+.quickslot-bar {
+  background: linear-gradient(0deg, #0a0a0f 0%, #12121a 100%);
+  border-top: 1px solid var(--border-iron);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quickslot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border-iron);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.quickslot:hover {
+  border-color: var(--border-gold-dim);
+  background: var(--bg-panel);
+}
+
+.quickslot__key {
+  font-size: 10px;
+  color: var(--text-dim);
+  background: var(--bg-darkest);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-iron);
+}
+
+.quickslot__name {
+  color: var(--text-gold);
+  font-weight: 700;
+}
+
+/* === 모달 === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-gold-dim);
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 480px;
+  max-width: 640px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), var(--glow-gold);
+}
+
+.modal__title {
+  font-family: var(--font-title);
+  font-size: 20px;
+  color: var(--text-gold);
+  margin-bottom: 20px;
+}
+
+.modal__field {
+  margin-bottom: 16px;
+}
+
+.modal__label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.modal__input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border-iron);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-size: 13px;
+  font-family: var(--font-body);
+  outline: none;
+}
+
+.modal__input:focus {
+  border-color: var(--border-gold-dim);
+}
+
+.modal__textarea {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border-iron);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-size: 13px;
+  font-family: monospace;
+  outline: none;
+  min-height: 120px;
+  resize: vertical;
+}
+
+.modal__textarea:focus {
+  border-color: var(--border-gold-dim);
+}
+
+.modal__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* === 섹션 디바이더 === */
+.section-divider {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 24px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================= */
+/* === 캐릭터 선택 화면 === */
+/* ============================================= */
+
+.character-select {
+  height: 100vh;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.character-select::-webkit-scrollbar {
+  width: 6px;
+}
+.character-select::-webkit-scrollbar-track {
+  background: transparent;
+}
+.character-select::-webkit-scrollbar-thumb {
+  background: var(--border-iron);
+  border-radius: 3px;
+}
+
+.character-select__bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(200, 168, 78, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(107, 140, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(26, 26, 46, 0.8) 0%, transparent 70%),
+    var(--bg-darkest);
+}
+
+.character-select__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 60px 24px 40px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.character-select__title {
+  font-family: var(--font-title);
+  font-size: 52px;
+  color: var(--text-gold);
+  text-shadow: 0 0 40px rgba(240, 208, 96, 0.3), 0 0 80px rgba(240, 208, 96, 0.1);
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+}
+
+.character-select__subtitle {
+  font-size: 16px;
+  color: var(--text-dim);
+  margin-bottom: 48px;
+}
+
+.character-select__loading {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.character-select__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+/* === 캐릭터 카드 === */
+.character-card {
+  background: var(--bg-panel);
+  border: 2px solid var(--border-iron);
+  border-radius: 12px;
+  padding: 24px 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  position: relative;
+}
+
+.character-card:hover {
+  border-color: var(--border-gold-dim);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), var(--glow-gold);
+}
+
+.character-card--global {
+  border-color: var(--border-gold-dim);
+}
+
+.character-card--global:hover {
+  border-color: var(--border-gold);
+}
+
+.character-card--project:hover {
+  border-color: var(--event-shield);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), var(--glow-blue);
+}
+
+.character-card__avatar {
+  font-size: 56px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 12px rgba(200, 168, 78, 0.3));
+}
+
+.character-card__name {
+  font-family: var(--font-title);
+  font-size: 20px;
+  color: var(--text-gold);
+  margin-bottom: 4px;
+}
+
+.character-card__type {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.character-card__stats {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.character-card__stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.character-card__hook-status {
+  margin-bottom: 12px;
+}
+
+.character-card__path {
+  font-size: 10px;
+  color: var(--text-dim);
+  opacity: 0.5;
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* === 즐겨찾기 버튼 === */
+.favorite-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: all 0.2s ease;
+  padding: 4px;
+  line-height: 1;
+  z-index: 2;
+  filter: grayscale(1);
+}
+
+.favorite-btn:hover {
+  opacity: 0.8;
+  transform: scale(1.2);
+  filter: grayscale(0);
+}
+
+.favorite-btn--active {
+  opacity: 1;
+  filter: grayscale(0);
+  animation: fav-pop 0.3s ease;
+}
+
+@keyframes fav-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* 즐겨찾기 카드 골드 테두리 */
+.character-card--favorite {
+  border-color: var(--border-gold-dim);
+  position: relative;
+}
+
+.character-card--favorite:hover {
+  border-color: var(--border-gold);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), var(--glow-gold);
+}
+
+/* 즐겨찾기 그리드 - 캐릭터 수에 따라 유연하게 */
+.favorites-grid {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+}
+
+/* === 게임 서버 카드 === */
+.server-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.server-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-panel);
+  border: 2px solid var(--border-iron);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.server-card:hover {
+  border-color: var(--border-gold-dim);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), var(--glow-gold);
+}
+
+.server-card__icon {
+  font-size: 36px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgba(200, 168, 78, 0.2));
+}
+
+.server-card__info {
+  flex: 1;
+  text-align: left;
+  min-width: 0;
+}
+
+.server-card__name {
+  font-family: var(--font-title);
+  font-size: 18px;
+  color: var(--text-gold);
+  margin-bottom: 2px;
+}
+
+.server-card__path {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.server-card__meta {
+  font-size: 12px;
+  color: var(--text-blue);
+}
+
+.server-card__remove {
+  flex-shrink: 0;
+  font-size: 14px !important;
+  padding: 4px 8px !important;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.server-card:hover .server-card__remove {
+  opacity: 1;
+}
+
+/* 서버 추가 카드 */
+.server-card--add {
+  border-style: dashed;
+  border-color: var(--border-iron);
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  padding: 24px;
+}
+
+.server-card--add:hover {
+  border-color: var(--border-gold-dim);
+  border-style: dashed;
+}
+
+.server-card__add-icon {
+  font-size: 28px;
+  color: var(--text-dim);
+  line-height: 1;
+}
+
+.server-card__add-text {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* ============================================= */
+/* === 파일 탐색기 (File Browser) === */
+/* ============================================= */
+
+.file-browser {
+  min-width: 560px;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+}
+
+.file-browser__path-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--bg-darkest);
+  border: 1px solid var(--border-iron);
+  border-radius: 8px;
+}
+
+.file-browser__current-path {
+  flex: 1;
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text-blue);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl;
+  text-align: left;
+}
+
+.file-browser__path-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.file-browser__nav-btn {
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+  min-width: unset;
+}
+
+.file-browser__manual {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.file-browser__manual .modal__input {
+  flex: 1;
+}
+
+.file-browser__manual .rpg-btn {
+  flex-shrink: 0;
+}
+
+.file-browser__error {
+  color: var(--event-sword);
+  font-size: 12px;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  border-radius: 6px;
+}
+
+.file-browser__list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 200px;
+  max-height: 400px;
+  border: 1px solid var(--border-iron);
+  border-radius: 8px;
+  background: var(--bg-darkest);
+}
+
+.file-browser__loading,
+.file-browser__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.file-browser__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.file-browser__item:last-child {
+  border-bottom: none;
+}
+
+.file-browser__item:hover {
+  background: var(--bg-panel-hover);
+}
+
+.file-browser__item--claude {
+  background: rgba(200, 168, 78, 0.05);
+}
+
+.file-browser__item--claude:hover {
+  background: rgba(200, 168, 78, 0.12);
+}
+
+.file-browser__item-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+.file-browser__item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-browser__item-name {
+  font-size: 14px;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-browser__item--claude .file-browser__item-name {
+  color: var(--text-gold);
+  font-weight: 600;
+}
+
+.file-browser__item-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.file-browser__claude-badge {
+  color: var(--text-gold);
+  background: rgba(200, 168, 78, 0.15);
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  border: 1px solid rgba(200, 168, 78, 0.3);
+}
+
+.file-browser__item-arrow {
+  color: var(--text-dim);
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.file-browser__item:hover .file-browser__item-arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.file-browser__footer {
+  margin-top: 16px;
+}
+
+.file-browser__hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
