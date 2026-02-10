@@ -2092,52 +2092,83 @@ body {
   align-items: flex-start;
 }
 
-/* 아이콘 피커 */
-.chain-icon-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  max-width: 160px;
-}
-
-.chain-icon-option {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  font-size: 18px;
-  transition: all 0.15s;
-}
-
-.chain-icon-option:hover {
-  background: var(--bg-panel-hover);
-  border-color: var(--border-iron);
-}
-
-.chain-icon-option--active {
+/* 아이콘 드롭다운 */
+.chain-icon-select {
+  padding: 8px 12px;
   background: var(--bg-panel);
+  border: 1px solid var(--border-iron);
+  border-radius: 8px;
+  color: var(--text-light);
+  font-size: 16px;
+  font-family: var(--font-body);
+  outline: none;
+  cursor: pointer;
+  min-width: 120px;
+  transition: border-color 0.2s;
+}
+
+.chain-icon-select:focus {
   border-color: var(--border-gold-dim);
   box-shadow: var(--glow-gold);
+}
+
+.chain-icon-select option {
+  font-size: 14px;
+  padding: 4px;
+}
+
+/* 설명 텍스트에리어 */
+.chain-desc-textarea {
+  resize: vertical;
+  min-height: 48px;
+  line-height: 1.5;
 }
 
 /* 단계 빌더 */
 .chain-steps-builder {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   margin-bottom: 16px;
 }
 
+.chain-steps-guide {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin: 0 0 10px 0;
+  padding: 8px 12px;
+  background: rgba(52, 152, 219, 0.08);
+  border: 1px solid rgba(52, 152, 219, 0.15);
+  border-radius: 6px;
+  line-height: 1.5;
+}
+
 .step-editor {
-  padding: 10px 14px;
+  padding: 12px 14px;
   background: var(--bg-slot);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 3px solid var(--border-iron);
   border-radius: 0 8px 8px 0;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.step-editor:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* 단계 간 연결 화살표 */
+.step-editor__connector {
+  text-align: center;
+  margin: -4px 0 4px 0;
+  position: relative;
+  top: -8px;
+}
+
+.step-editor__connector-arrow {
+  font-size: 14px;
+  color: var(--text-dim);
+  opacity: 0.5;
 }
 
 .step-editor__header {
@@ -2148,16 +2179,16 @@ body {
 }
 
 .step-editor__num {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-dim);
-  width: 24px;
+  font-size: 12px;
+  font-weight: 800;
+  width: 28px;
   flex-shrink: 0;
+  text-align: center;
 }
 
 .step-editor__type-select {
   flex: 1;
-  padding: 4px 8px;
+  padding: 5px 10px;
   background: var(--bg-panel);
   border: 1px solid var(--border-iron);
   border-radius: 6px;
@@ -2165,10 +2196,102 @@ body {
   font-size: 12px;
   font-family: var(--font-body);
   outline: none;
+  cursor: pointer;
 }
 
 .step-editor__type-select:focus {
   border-color: var(--border-gold-dim);
+}
+
+/* 툴팁 트리거 (❓ 아이콘) */
+.step-editor__tooltip-trigger {
+  position: relative;
+  cursor: help;
+  font-size: 13px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.step-editor__tooltip-trigger:hover {
+  opacity: 1;
+}
+
+/* 툴팁 팝업 */
+.step-editor__tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  width: 260px;
+  padding: 10px 14px;
+  background: var(--bg-deeper);
+  border: 1px solid var(--border-gold-dim);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.step-editor__tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--border-gold-dim);
+}
+
+.step-editor__tooltip-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-gold);
+  margin-bottom: 4px;
+}
+
+.step-editor__tooltip-desc {
+  font-size: 11px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* 순서 이동 버튼 */
+.step-editor__order-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex-shrink: 0;
+}
+
+.step-editor__order-btn {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-iron);
+  color: var(--text-dim);
+  font-size: 9px;
+  line-height: 1;
+  padding: 2px 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.step-editor__order-btn:hover:not(:disabled) {
+  color: var(--text-light);
+  border-color: var(--border-gold-dim);
+  background: var(--bg-panel-hover);
+}
+
+.step-editor__order-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
 }
 
 .step-editor__remove {
@@ -2177,10 +2300,39 @@ body {
   min-width: unset;
 }
 
+/* 필드 안내 문구 */
+.step-editor__hint {
+  font-size: 10px;
+  color: var(--text-dim);
+  opacity: 0.7;
+  margin-bottom: 8px;
+  padding-left: 28px;
+  line-height: 1.4;
+}
+
+/* 필드 그룹 (라벨 + 인풋) */
+.step-editor__field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.step-editor__field-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  padding-left: 2px;
+}
+
+.step-editor__optional {
+  font-weight: 400;
+  opacity: 0.6;
+}
+
 .step-editor__fields {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .step-editor__input {
@@ -2193,6 +2345,7 @@ body {
   font-size: 12px;
   font-family: var(--font-body);
   outline: none;
+  transition: border-color 0.2s;
 }
 
 .step-editor__input:focus {
@@ -2206,8 +2359,9 @@ select.step-editor__input {
 .chain-add-step {
   align-self: flex-start;
   font-size: 12px !important;
-  padding: 6px 14px !important;
+  padding: 8px 16px !important;
   border-style: dashed !important;
+  margin-top: 4px;
 }
 
 /* === 콤보 이벤트 (전투 로그) === */

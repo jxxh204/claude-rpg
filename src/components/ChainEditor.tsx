@@ -1,18 +1,54 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApi } from '../hooks/useApi'
 import type { Chain, ChainStep, ChainStepType } from '../types'
 import { HOOK_EVENT_TYPES } from '../types'
 
-const STEP_TYPE_META: Record<ChainStepType, { icon: string; label: string; color: string }> = {
-  hook_trigger: { icon: '⚡', label: '트리거', color: '#f1c40f' },
-  command: { icon: '⚔️', label: '커맨드', color: '#e74c3c' },
-  skill_ref: { icon: '📕', label: '스킬', color: '#9b59b6' },
-  agent_spawn: { icon: '🐲', label: '소환', color: '#1abc9c' },
-  condition: { icon: '🔷', label: '조건', color: '#3498db' },
+// 단계 타입 메타 — 아이콘, 라벨, 색상, 설명(툴팁)
+const STEP_TYPE_META: Record<ChainStepType, {
+  icon: string; label: string; color: string; description: string
+}> = {
+  hook_trigger: {
+    icon: '⚡', label: '트리거', color: '#f1c40f',
+    description: 'Claude Code 이벤트(도구 사용, 세션 시작 등)를 감지하여 콤보를 시작합니다. 반드시 첫 번째 단계여야 합니다.',
+  },
+  command: {
+    icon: '⚔️', label: '커맨드', color: '#e74c3c',
+    description: '슬래시 커맨드(/lint, /test 등)를 실행합니다. ~/.claude/commands/ 에 정의된 커맨드를 사용합니다.',
+  },
+  skill_ref: {
+    icon: '📕', label: '스킬', color: '#9b59b6',
+    description: '스킬(SKILL.md)을 참조합니다. ~/.claude/skills/ 에 설치된 스킬을 연결합니다.',
+  },
+  agent_spawn: {
+    icon: '🐲', label: '소환', color: '#1abc9c',
+    description: '서브에이전트(Bash, Explore 등)를 소환합니다. 자동화된 작업 수행에 활용됩니다.',
+  },
+  condition: {
+    icon: '🔷', label: '조건', color: '#3498db',
+    description: '조건 분기입니다. 도구 매칭, 파일 패턴 매칭 등을 판별하여 이후 단계 실행 여부를 결정합니다.',
+  },
 }
 
-const EMOJI_OPTIONS = ['🔗', '⚡', '🔥', '💫', '🌀', '🗡️', '🛡️', '💎', '🌟', '🎯', '🎪', '🔮']
+// 아이콘 드롭다운 옵션 — 카테고리별 정리
+const ICON_OPTIONS: { emoji: string; label: string }[] = [
+  { emoji: '🔗', label: '🔗 체인' },
+  { emoji: '⚡', label: '⚡ 번개' },
+  { emoji: '🔥', label: '🔥 화염' },
+  { emoji: '💫', label: '💫 마법' },
+  { emoji: '🌀', label: '🌀 소용돌이' },
+  { emoji: '🗡️', label: '🗡️ 검' },
+  { emoji: '🛡️', label: '🛡️ 방패' },
+  { emoji: '💎', label: '💎 보석' },
+  { emoji: '🌟', label: '🌟 별' },
+  { emoji: '🎯', label: '🎯 과녁' },
+  { emoji: '🎪', label: '🎪 서커스' },
+  { emoji: '🔮', label: '🔮 수정구' },
+  { emoji: '⚔️', label: '⚔️ 교차검' },
+  { emoji: '🏹', label: '🏹 활' },
+  { emoji: '🧪', label: '🧪 실험' },
+  { emoji: '📜', label: '📜 두루마리' },
+]
 
 export function ChainEditor() {
   const { data: chains, loading, refetch } = useApi<Chain[]>('/api/chains')
@@ -338,6 +374,16 @@ function ChainEditModal({
     ))
   }
 
+  const moveStep = (idx: number, direction: -1 | 1) => {
+    const target = idx + direction
+    if (target < 0 || target >= steps.length) return
+    setSteps(prev => {
+      const next = [...prev]
+      ;[next[idx], next[target]] = [next[target], next[idx]]
+      return next
+    })
+  }
+
   const handleSubmit = () => {
     if (!name.trim()) return alert('콤보 이름을 입력하세요')
     if (steps.length === 0) return alert('최소 1개의 단계가 필요합니다')
@@ -372,19 +418,19 @@ function ChainEditModal({
 
         {/* 기본 정보 */}
         <div className="chain-modal__row">
-          <div className="modal__field" style={{ flex: 0 }}>
+          <div className="modal__field" style={{ flex: '0 0 auto' }}>
             <label className="modal__label">아이콘</label>
-            <div className="chain-icon-picker">
-              {EMOJI_OPTIONS.map(emoji => (
-                <span
-                  key={emoji}
-                  className={`chain-icon-option ${icon === emoji ? 'chain-icon-option--active' : ''}`}
-                  onClick={() => setIcon(emoji)}
-                >
-                  {emoji}
-                </span>
+            <select
+              className="chain-icon-select"
+              value={icon}
+              onChange={e => setIcon(e.target.value)}
+            >
+              {ICON_OPTIONS.map(opt => (
+                <option key={opt.emoji} value={opt.emoji}>
+                  {opt.label}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
           <div className="modal__field" style={{ flex: 1 }}>
             <label className="modal__label">콤보 이름</label>
@@ -399,25 +445,32 @@ function ChainEditModal({
 
         <div className="modal__field">
           <label className="modal__label">설명</label>
-          <input
-            className="modal__input"
+          <textarea
+            className="modal__input chain-desc-textarea"
             value={description}
             onChange={e => setDescription(e.target.value)}
-            placeholder="이 콤보가 하는 일을 설명하세요"
+            placeholder="이 콤보가 하는 일을 설명하세요 (예: 코드 수정 후 자동으로 린트 → 테스트 → 리뷰를 실행합니다)"
+            rows={2}
           />
         </div>
 
         {/* 단계 빌더 */}
         <div className="section-divider">{'⚙️'} 단계 구성</div>
+        <p className="chain-steps-guide">
+          트리거(이벤트 감지) → 동작(커맨드/스킬/소환) 순으로 단계를 구성하세요. 각 단계 위에 마우스를 올리면 설명을 볼 수 있습니다.
+        </p>
         <div className="chain-steps-builder">
           {steps.map((step, idx) => (
             <StepEditor
               key={step.id}
               step={step}
               index={idx}
+              total={steps.length}
               onUpdate={updates => updateStep(idx, updates)}
               onUpdateConfig={config => updateStepConfig(idx, config)}
               onRemove={() => removeStep(idx)}
+              onMoveUp={() => moveStep(idx, -1)}
+              onMoveDown={() => moveStep(idx, 1)}
             />
           ))}
           <button className="rpg-btn chain-add-step" onClick={addStep}>
@@ -448,25 +501,50 @@ function ChainEditModal({
 // 단계 에디터
 // =============================
 
+// 타입별 필드 안내 문구
+const STEP_FIELD_HINTS: Record<ChainStepType, string> = {
+  hook_trigger: '어떤 이벤트에 반응할지 선택하고, 필요시 매처 패턴을 지정하세요.',
+  command: '실행할 슬래시 커맨드 이름을 입력하세요. (~/.claude/commands/ 디렉토리 참조)',
+  skill_ref: '참조할 스킬 디렉토리 이름을 입력하세요. (~/.claude/skills/ 디렉토리 참조)',
+  agent_spawn: '소환할 에이전트 타입을 입력하세요. (Bash, Explore, Plan 등)',
+  condition: '조건을 설정하여 이후 단계의 실행 여부를 제어합니다.',
+}
+
 function StepEditor({
   step,
   index,
+  total,
   onUpdate,
   onUpdateConfig,
   onRemove,
+  onMoveUp,
+  onMoveDown,
 }: {
   step: ChainStep
   index: number
+  total: number
   onUpdate: (updates: Partial<ChainStep>) => void
   onUpdateConfig: (config: Record<string, string>) => void
   onRemove: () => void
+  onMoveUp: () => void
+  onMoveDown: () => void
 }) {
   const meta = STEP_TYPE_META[step.type]
+  const [showTooltip, setShowTooltip] = useState(false)
 
   return (
     <div className="step-editor" style={{ borderLeftColor: meta.color }}>
+      {/* 단계 간 연결 화살표 (첫 번째 아닌 경우) */}
+      {index > 0 && (
+        <div className="step-editor__connector">
+          <span className="step-editor__connector-arrow">↓</span>
+        </div>
+      )}
+
       <div className="step-editor__header">
-        <span className="step-editor__num">#{index + 1}</span>
+        <span className="step-editor__num" style={{ color: meta.color }}>#{index + 1}</span>
+
+        {/* 타입 선택 드롭다운 */}
         <select
           className="step-editor__type-select"
           value={step.type}
@@ -476,75 +554,131 @@ function StepEditor({
             <option key={key} value={key}>{m.icon} {m.label}</option>
           ))}
         </select>
+
+        {/* 툴팁 토글 */}
+        <span
+          className="step-editor__tooltip-trigger"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          ❓
+          {showTooltip && (
+            <div className="step-editor__tooltip">
+              <div className="step-editor__tooltip-title">{meta.icon} {meta.label}</div>
+              <div className="step-editor__tooltip-desc">{meta.description}</div>
+            </div>
+          )}
+        </span>
+
+        {/* 순서 이동 버튼 */}
+        <div className="step-editor__order-btns">
+          <button
+            className="step-editor__order-btn"
+            onClick={onMoveUp}
+            disabled={index === 0}
+            title="위로 이동"
+          >▲</button>
+          <button
+            className="step-editor__order-btn"
+            onClick={onMoveDown}
+            disabled={index === total - 1}
+            title="아래로 이동"
+          >▼</button>
+        </div>
+
         <button className="rpg-btn rpg-btn--danger step-editor__remove" onClick={onRemove}>✕</button>
       </div>
+
+      {/* 필드 안내 문구 */}
+      <div className="step-editor__hint">{STEP_FIELD_HINTS[step.type]}</div>
 
       <div className="step-editor__fields">
         {step.type === 'hook_trigger' && (
           <>
-            <select
-              className="step-editor__input"
-              value={step.config.eventType || ''}
-              onChange={e => onUpdateConfig({ eventType: e.target.value })}
-            >
-              <option value="">이벤트 선택...</option>
-              {Object.keys(HOOK_EVENT_TYPES).map(key => (
-                <option key={key} value={key}>
-                  {(HOOK_EVENT_TYPES as Record<string, { rpgName: string }>)[key]?.rpgName || key} ({key})
-                </option>
-              ))}
-            </select>
-            <input
-              className="step-editor__input"
-              value={step.config.matcher || ''}
-              onChange={e => onUpdateConfig({ matcher: e.target.value })}
-              placeholder="매처 (예: Edit|Write)"
-            />
+            <div className="step-editor__field-group">
+              <label className="step-editor__field-label">이벤트 타입</label>
+              <select
+                className="step-editor__input"
+                value={step.config.eventType || ''}
+                onChange={e => onUpdateConfig({ eventType: e.target.value })}
+              >
+                <option value="">이벤트 선택...</option>
+                {Object.keys(HOOK_EVENT_TYPES).map(key => (
+                  <option key={key} value={key}>
+                    {(HOOK_EVENT_TYPES as Record<string, { rpgName: string }>)[key]?.rpgName || key} ({key})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="step-editor__field-group">
+              <label className="step-editor__field-label">매처 패턴 <span className="step-editor__optional">(선택)</span></label>
+              <input
+                className="step-editor__input"
+                value={step.config.matcher || ''}
+                onChange={e => onUpdateConfig({ matcher: e.target.value })}
+                placeholder="예: Edit|Write (정규식, 비우면 모든 이벤트)"
+              />
+            </div>
           </>
         )}
         {step.type === 'command' && (
-          <input
-            className="step-editor__input"
-            value={step.config.commandName || ''}
-            onChange={e => onUpdateConfig({ commandName: e.target.value })}
-            placeholder="커맨드 이름 (예: lint)"
-          />
+          <div className="step-editor__field-group">
+            <label className="step-editor__field-label">커맨드 이름</label>
+            <input
+              className="step-editor__input"
+              value={step.config.commandName || ''}
+              onChange={e => onUpdateConfig({ commandName: e.target.value })}
+              placeholder="예: lint, test, review"
+            />
+          </div>
         )}
         {step.type === 'skill_ref' && (
-          <input
-            className="step-editor__input"
-            value={step.config.skillName || ''}
-            onChange={e => onUpdateConfig({ skillName: e.target.value })}
-            placeholder="스킬 이름 (예: pdf)"
-          />
+          <div className="step-editor__field-group">
+            <label className="step-editor__field-label">스킬 이름</label>
+            <input
+              className="step-editor__input"
+              value={step.config.skillName || ''}
+              onChange={e => onUpdateConfig({ skillName: e.target.value })}
+              placeholder="예: pdf, code-review, frontend-design"
+            />
+          </div>
         )}
         {step.type === 'agent_spawn' && (
-          <input
-            className="step-editor__input"
-            value={step.config.agentType || ''}
-            onChange={e => onUpdateConfig({ agentType: e.target.value })}
-            placeholder="에이전트 타입 (예: Bash)"
-          />
+          <div className="step-editor__field-group">
+            <label className="step-editor__field-label">에이전트 타입</label>
+            <input
+              className="step-editor__input"
+              value={step.config.agentType || ''}
+              onChange={e => onUpdateConfig({ agentType: e.target.value })}
+              placeholder="예: Bash, Explore, Plan"
+            />
+          </div>
         )}
         {step.type === 'condition' && (
           <>
-            <select
-              className="step-editor__input"
-              value={step.config.conditionType || ''}
-              onChange={e => onUpdateConfig({ conditionType: e.target.value })}
-            >
-              <option value="">조건 타입...</option>
-              <option value="tool_match">도구 매칭</option>
-              <option value="file_match">파일 매칭</option>
-              <option value="always">항상 실행</option>
-            </select>
-            {step.config.conditionType !== 'always' && (
-              <input
+            <div className="step-editor__field-group">
+              <label className="step-editor__field-label">조건 타입</label>
+              <select
                 className="step-editor__input"
-                value={step.config.conditionValue || ''}
-                onChange={e => onUpdateConfig({ conditionValue: e.target.value })}
-                placeholder="매칭 패턴 (예: *.test.*)"
-              />
+                value={step.config.conditionType || ''}
+                onChange={e => onUpdateConfig({ conditionType: e.target.value })}
+              >
+                <option value="">조건 타입 선택...</option>
+                <option value="tool_match">도구 매칭 — 특정 도구 사용 시</option>
+                <option value="file_match">파일 매칭 — 파일 패턴 일치 시</option>
+                <option value="always">항상 실행 — 무조건 통과</option>
+              </select>
+            </div>
+            {step.config.conditionType && step.config.conditionType !== 'always' && (
+              <div className="step-editor__field-group">
+                <label className="step-editor__field-label">매칭 패턴</label>
+                <input
+                  className="step-editor__input"
+                  value={step.config.conditionValue || ''}
+                  onChange={e => onUpdateConfig({ conditionValue: e.target.value })}
+                  placeholder={step.config.conditionType === 'tool_match' ? '예: Edit|Write' : '예: *.test.*, src/**/*.tsx'}
+                />
+              </div>
             )}
           </>
         )}
