@@ -771,6 +771,202 @@ body {
   color: var(--text-light);
 }
 
+.log-entry__content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.log-entry__detail {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: monospace;
+  margin-top: 3px;
+  padding-left: 24px;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* === 전투 로그 필터 === */
+.battle-log__filters {
+  display: flex;
+  gap: 4px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-iron);
+}
+
+.battle-log__filter {
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.battle-log__filter:hover {
+  background: var(--bg-panel);
+  color: var(--text-light);
+}
+
+.battle-log__filter--active {
+  background: var(--bg-panel);
+  border-color: var(--border-gold-dim);
+  color: var(--text-gold);
+}
+
+/* === 라이브 세션 배너 === */
+.battle-log__live-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(90deg, rgba(39, 174, 96, 0.15) 0%, rgba(39, 174, 96, 0.05) 100%);
+  border-bottom: 1px solid rgba(39, 174, 96, 0.3);
+  animation: live-pulse 2s infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { background-color: rgba(39, 174, 96, 0.08); }
+  50% { background-color: rgba(39, 174, 96, 0.15); }
+}
+
+.battle-log__live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--active-green);
+  box-shadow: 0 0 8px rgba(39, 174, 96, 0.6);
+  animation: dot-blink 1.5s infinite;
+}
+
+@keyframes dot-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.battle-log__live-text {
+  font-size: 11px;
+  color: var(--active-green);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* === 세션 그룹 === */
+.log-session {
+  margin-bottom: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.log-session__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--bg-panel);
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.log-session__header:hover {
+  background: var(--bg-panel-hover);
+}
+
+.log-session__header--active {
+  background: rgba(39, 174, 96, 0.1);
+  border-left: 3px solid var(--active-green);
+}
+
+.log-session__header--active:hover {
+  background: rgba(39, 174, 96, 0.15);
+}
+
+.log-session__toggle {
+  font-size: 9px;
+  color: var(--text-dim);
+  width: 12px;
+  flex-shrink: 0;
+}
+
+.log-session__title {
+  flex: 1;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+}
+
+.log-session__meta {
+  font-size: 10px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.log-session__body {
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 2px 0 2px 8px;
+}
+
+.log-session__body .log-entry {
+  margin-bottom: 2px;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.log-session__footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--text-dim);
+}
+
+.log-session__summary {
+  font-size: 10px;
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+/* === 로그 엔트리 추가 아이콘 === */
+.log-entry--fail { border-left-color: #e74c3c; }
+.log-entry--castle { border-left-color: var(--active-green); }
+.log-entry--door { border-left-color: var(--event-stop); }
+.log-entry--bell { border-left-color: var(--warning-orange); }
+
+/* === 캐릭터 카드 미니 스탯 === */
+.char-card__mini-stats {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.char-card__mini-stats span {
+  cursor: default;
+}
+
+.char-card__mini-stats span:hover {
+  color: var(--text-light);
+}
+
 /* === 빈 상태 === */
 .empty-state {
   text-align: center;
@@ -1416,5 +1612,607 @@ body {
   font-size: 11px;
   color: var(--text-dim);
   margin-bottom: 12px;
+}
+
+/* ============================================= */
+/* === 스킬 라이브러리 (Library) === */
+/* ============================================= */
+
+.library-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.library-filters__tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.library-filter {
+  padding: 5px 14px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.library-filter:hover {
+  background: var(--bg-panel);
+  color: var(--text-light);
+}
+
+.library-filter--active {
+  background: var(--bg-panel);
+  border-color: var(--border-gold-dim);
+  color: var(--text-gold);
+}
+
+.library-search {
+  flex: 1;
+  min-width: 160px;
+  padding: 6px 12px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border-iron);
+  border-radius: 16px;
+  color: var(--text-light);
+  font-size: 12px;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.library-search:focus {
+  border-color: var(--border-gold-dim);
+}
+
+/* === 레시피 카드 === */
+.recipe-card {
+  position: relative;
+  cursor: pointer;
+}
+
+.recipe-card--installed {
+  border-color: var(--border-gold-dim) !important;
+  box-shadow: inset 0 0 20px rgba(200, 168, 78, 0.05);
+}
+
+/* 희귀도 배지 */
+.recipe-rarity {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.recipe-rarity--common {
+  background: rgba(74, 74, 90, 0.4);
+  color: #aaa;
+  border: 1px solid var(--border-iron);
+}
+
+.recipe-rarity--uncommon {
+  background: rgba(39, 174, 96, 0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(39, 174, 96, 0.3);
+}
+
+.recipe-rarity--rare {
+  background: rgba(52, 152, 219, 0.15);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.recipe-rarity--epic {
+  background: rgba(155, 89, 182, 0.15);
+  color: #9b59b6;
+  border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+.recipe-rarity--legendary {
+  background: rgba(241, 196, 15, 0.15);
+  color: #f1c40f;
+  border: 1px solid rgba(241, 196, 15, 0.3);
+  animation: legendary-pulse 3s infinite;
+}
+
+@keyframes legendary-pulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(241, 196, 15, 0.2); }
+  50% { box-shadow: 0 0 12px rgba(241, 196, 15, 0.5); }
+}
+
+/* 희귀도별 카드 보더 */
+.recipe-card--common { border-color: var(--border-iron); }
+.recipe-card--uncommon { border-color: rgba(39, 174, 96, 0.3); }
+.recipe-card--uncommon:hover { border-color: rgba(39, 174, 96, 0.5); box-shadow: 0 0 15px rgba(39, 174, 96, 0.15); }
+.recipe-card--rare { border-color: rgba(52, 152, 219, 0.3); }
+.recipe-card--rare:hover { border-color: rgba(52, 152, 219, 0.5); box-shadow: 0 0 15px rgba(52, 152, 219, 0.15); }
+.recipe-card--epic { border-color: rgba(155, 89, 182, 0.3); }
+.recipe-card--epic:hover { border-color: rgba(155, 89, 182, 0.5); box-shadow: 0 0 15px rgba(155, 89, 182, 0.15); }
+.recipe-card--legendary { border-color: rgba(241, 196, 15, 0.3); }
+.recipe-card--legendary:hover { border-color: rgba(241, 196, 15, 0.5); box-shadow: 0 0 20px rgba(241, 196, 15, 0.2); }
+
+/* 구성요소 배지 */
+.recipe-components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.recipe-component-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  background: var(--bg-slot);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+/* 태그 */
+.recipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.recipe-tags--large {
+  gap: 6px;
+}
+
+.recipe-tag {
+  font-size: 10px;
+  color: var(--text-blue);
+  opacity: 0.7;
+}
+
+/* 설치됨 배지 */
+.recipe-installed-badge {
+  font-size: 11px;
+  color: var(--active-green);
+  font-weight: 600;
+}
+
+/* === 레시피 아이콘 === */
+.recipe-icon {
+  font-size: 28px !important;
+}
+
+/* === 레시피 상세 모달 === */
+.recipe-modal {
+  min-width: 520px;
+  max-width: 680px;
+}
+
+.recipe-modal__icon {
+  font-size: 28px;
+  margin-right: 8px;
+}
+
+.recipe-modal__meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.recipe-modal__desc {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.recipe-modal__components {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.recipe-modal__github {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 14px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border-iron);
+  border-radius: 6px;
+  color: var(--text-blue);
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.recipe-modal__github:hover {
+  border-color: var(--text-blue);
+  background: rgba(107, 140, 255, 0.1);
+}
+
+/* 구성요소 프리뷰 */
+.component-preview {
+  padding: 10px 14px;
+  background: var(--bg-slot);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.component-preview__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.component-preview__icon {
+  font-size: 16px;
+}
+
+.component-preview__type {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-dim);
+  padding: 1px 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.component-preview__name {
+  font-size: 13px;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.component-preview__desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  padding-left: 24px;
+}
+
+.component-preview__hook {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-blue);
+  margin-top: 4px;
+  padding-left: 24px;
+}
+
+/* ============================================= */
+/* === 체이닝 시스템 (Chains) === */
+/* ============================================= */
+
+/* 콤보 템플릿 */
+.chain-templates {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.chain-template {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border-iron);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chain-template:hover {
+  border-color: var(--border-gold-dim);
+  background: var(--bg-panel);
+}
+
+.chain-template__icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.chain-template__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chain-template__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.chain-template__desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chain-template__arrow {
+  color: var(--text-dim);
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.chain-template:hover .chain-template__arrow {
+  opacity: 1;
+}
+
+/* 체인 카드 */
+.chain-card--active {
+  border-color: rgba(39, 174, 96, 0.4) !important;
+  box-shadow: inset 0 0 20px rgba(39, 174, 96, 0.05);
+}
+
+.chain-card__icon {
+  font-size: 28px !important;
+}
+
+.chain-card__stats {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.chain-card__stat {
+  opacity: 0.7;
+}
+
+/* 체인 토글 스위치 */
+.chain-toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border-iron);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.chain-toggle--active {
+  background: rgba(39, 174, 96, 0.3);
+  border-color: var(--active-green);
+  box-shadow: 0 0 8px rgba(39, 174, 96, 0.3);
+}
+
+.chain-toggle__knob {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s;
+}
+
+.chain-toggle--active .chain-toggle__knob {
+  left: 18px;
+  background: var(--active-green);
+}
+
+/* 체인 플로우 시각화 */
+.chain-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.chain-flow__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chain-flow__arrow {
+  color: var(--text-dim);
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+.chain-flow__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  background: var(--bg-slot);
+  border: 1px solid var(--border-iron);
+  border-radius: 10px;
+  font-size: 10px;
+  color: var(--text-light);
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chain-flow__step--hook_trigger {
+  border-color: rgba(241, 196, 15, 0.4);
+  background: rgba(241, 196, 15, 0.08);
+  color: #f1c40f;
+}
+
+.chain-flow__step--command {
+  border-color: rgba(231, 76, 60, 0.4);
+  background: rgba(231, 76, 60, 0.08);
+  color: #e74c3c;
+}
+
+.chain-flow__step--skill_ref {
+  border-color: rgba(155, 89, 182, 0.4);
+  background: rgba(155, 89, 182, 0.08);
+  color: #9b59b6;
+}
+
+.chain-flow__step--agent_spawn {
+  border-color: rgba(26, 188, 156, 0.4);
+  background: rgba(26, 188, 156, 0.08);
+  color: #1abc9c;
+}
+
+.chain-flow__step--condition {
+  border-color: rgba(52, 152, 219, 0.4);
+  background: rgba(52, 152, 219, 0.08);
+  color: #3498db;
+}
+
+/* 체인 편집 모달 */
+.chain-modal {
+  min-width: 560px;
+  max-width: 720px;
+}
+
+.chain-modal__row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+/* 아이콘 피커 */
+.chain-icon-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 160px;
+}
+
+.chain-icon-option {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.15s;
+}
+
+.chain-icon-option:hover {
+  background: var(--bg-panel-hover);
+  border-color: var(--border-iron);
+}
+
+.chain-icon-option--active {
+  background: var(--bg-panel);
+  border-color: var(--border-gold-dim);
+  box-shadow: var(--glow-gold);
+}
+
+/* 단계 빌더 */
+.chain-steps-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.step-editor {
+  padding: 10px 14px;
+  background: var(--bg-slot);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 3px solid var(--border-iron);
+  border-radius: 0 8px 8px 0;
+}
+
+.step-editor__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.step-editor__num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.step-editor__type-select {
+  flex: 1;
+  padding: 4px 8px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-iron);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-size: 12px;
+  font-family: var(--font-body);
+  outline: none;
+}
+
+.step-editor__type-select:focus {
+  border-color: var(--border-gold-dim);
+}
+
+.step-editor__remove {
+  padding: 2px 6px !important;
+  font-size: 11px !important;
+  min-width: unset;
+}
+
+.step-editor__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-editor__input {
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-iron);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-size: 12px;
+  font-family: var(--font-body);
+  outline: none;
+}
+
+.step-editor__input:focus {
+  border-color: var(--border-gold-dim);
+}
+
+select.step-editor__input {
+  cursor: pointer;
+}
+
+.chain-add-step {
+  align-self: flex-start;
+  font-size: 12px !important;
+  padding: 6px 14px !important;
+  border-style: dashed !important;
+}
+
+/* === 콤보 이벤트 (전투 로그) === */
+.log-entry--combo {
+  border-left-color: #f1c40f;
+  background: rgba(241, 196, 15, 0.05);
 }
 

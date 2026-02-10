@@ -28,27 +28,20 @@ interface GameServer {
 }
 
 interface CharacterSelectProps {
-  onSelect: (character: Character) => void
+  serverId?: string
+  navigate: (path: string) => void
 }
 
 // =============================
-// 메인 컴포넌트: 서버 선택 → 캐릭터 선택
+// 메인 컴포넌트: serverId에 따라 분기
 // =============================
 
-export function CharacterSelect({ onSelect }: CharacterSelectProps) {
-  const [selectedServer, setSelectedServer] = useState<GameServer | null>(null)
-
-  if (selectedServer) {
-    return (
-      <CharacterList
-        server={selectedServer}
-        onSelect={onSelect}
-        onBack={() => setSelectedServer(null)}
-      />
-    )
+export function CharacterSelect({ serverId, navigate }: CharacterSelectProps) {
+  if (serverId) {
+    return <CharacterList serverId={serverId} navigate={navigate} />
   }
 
-  return <ServerSelect onSelectServer={setSelectedServer} onSelectGlobal={onSelect} />
+  return <ServerSelect navigate={navigate} />
 }
 
 // =============================
@@ -84,17 +77,11 @@ function useFavorites() {
 // 1단계: 서버(폴더) 선택 화면
 // =============================
 
-function ServerSelect({
-  onSelectServer,
-  onSelectGlobal,
-}: {
-  onSelectServer: (server: GameServer) => void
-  onSelectGlobal: (character: Character) => void
-}) {
+function ServerSelect({ navigate }: { navigate: (path: string) => void }) {
   const { data: servers, loading, refetch } = useApi<GameServer[]>('/api/characters/servers')
   const { data: globalChar } = useApi<Character>('/api/characters/global')
   const [showAddServer, setShowAddServer] = useState(false)
-  const { favorites, toggle: toggleFav, isFavorite } = useFavorites()
+  const { toggle: toggleFav, isFavorite } = useFavorites()
 
   // 즐겨찾기된 캐릭터 모아보기
   const favoriteChars: (Character & { serverName?: string })[] = []
@@ -116,14 +103,6 @@ function ServerSelect({
     if (!confirm('이 게임 서버를 목록에서 제거하시겠습니까?')) return
     await fetch(`/api/characters/servers/${serverId}`, { method: 'DELETE' })
     refetch()
-  }
-
-  const handleFavSelect = (char: Character) => {
-    if (char.type === 'global') {
-      onSelectGlobal(char)
-    } else {
-      onSelectGlobal(char) // 즐겨찾기에서 바로 캐릭터 선택
-    }
   }
 
   return (
@@ -157,7 +136,7 @@ function ServerSelect({
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: i * 0.05, type: 'spring' }}
-                      onClick={() => handleFavSelect(char)}
+                      onClick={() => navigate(`/play/${char.id}`)}
                       whileHover={{ scale: 1.03, y: -4 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -194,7 +173,7 @@ function ServerSelect({
                 <div className="character-select__grid" style={{ maxWidth: '300px', margin: '0 auto' }}>
                   <GlobalCharCard
                     character={globalChar}
-                    onSelect={onSelectGlobal}
+                    onSelect={() => navigate('/play/global')}
                     isFavorite={isFavorite(globalChar.id)}
                     onToggleFav={() => toggleFav(globalChar.id)}
                   />
@@ -216,7 +195,7 @@ function ServerSelect({
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ delay: i * 0.08, type: 'spring' }}
-                    onClick={() => onSelectServer(server)}
+                    onClick={() => navigate(`/server/${server.id}`)}
                     whileHover={{ scale: 1.02, y: -3 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -292,14 +271,14 @@ function GlobalCharCard({
   onToggleFav,
 }: {
   character: Character
-  onSelect: (c: Character) => void
+  onSelect: () => void
   isFavorite: boolean
   onToggleFav: () => void
 }) {
   return (
     <motion.div
       className="character-card character-card--global"
-      onClick={() => onSelect(character)}
+      onClick={onSelect}
       whileHover={{ scale: 1.03, y: -4 }}
       whileTap={{ scale: 0.98 }}
     >
@@ -327,17 +306,14 @@ function GlobalCharCard({
 // =============================
 
 function CharacterList({
-  server,
-  onSelect,
-  onBack,
+  serverId,
+  navigate,
 }: {
-  server: GameServer
-  onSelect: (c: Character) => void
-  onBack: () => void
+  serverId: string
+  navigate: (path: string) => void
 }) {
-  const { data: freshServers, refetch } = useApi<GameServer[]>('/api/characters/servers')
-  // 최신 서버 데이터에서 현재 서버 찾기
-  const currentServer = freshServers?.find(s => s.id === server.id) || server
+  const { data: servers, refetch } = useApi<GameServer[]>('/api/characters/servers')
+  const currentServer = servers?.find(s => s.id === serverId)
   const { toggle: toggleFav, isFavorite } = useFavorites()
 
   const handleActivateHooks = async (charId: string, e: React.MouseEvent) => {
@@ -352,6 +328,36 @@ function CharacterList({
     refetch()
   }
 
+  // 서버 데이터 로딩 중
+  if (!servers) {
+    return (
+      <div className="character-select">
+        <div className="character-select__bg" />
+        <div className="character-select__content">
+          <div className="character-select__loading">서버 데이터 로딩 중...</div>
+        </div>
+      </div>
+    )
+  }
+
+  // 서버를 찾을 수 없음
+  if (!currentServer) {
+    return (
+      <div className="character-select">
+        <div className="character-select__bg" />
+        <div className="character-select__content">
+          <div className="empty-state" style={{ padding: '60px 20px' }}>
+            <div className="empty-state__icon">{'❌'}</div>
+            <div className="empty-state__text">서버를 찾을 수 없습니다</div>
+            <button className="rpg-btn rpg-btn--primary" onClick={() => navigate('/')}>
+              {'◀'} 서버 선택으로
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="character-select">
       <div className="character-select__bg" />
@@ -363,7 +369,7 @@ function CharacterList({
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         {/* 뒤로가기 */}
-        <button className="rpg-btn" onClick={onBack} style={{ marginBottom: '16px', alignSelf: 'flex-start' }}>
+        <button className="rpg-btn" onClick={() => navigate('/')} style={{ marginBottom: '16px', alignSelf: 'flex-start' }}>
           {'◀'} 서버 선택으로
         </button>
 
@@ -393,7 +399,7 @@ function CharacterList({
                   initial={{ opacity: 0, scale: 0.8, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   transition={{ delay: i * 0.06, type: 'spring' }}
-                  onClick={() => onSelect(char)}
+                  onClick={() => navigate(`/play/${char.id}`)}
                   whileHover={{ scale: 1.03, y: -4 }}
                   whileTap={{ scale: 0.98 }}
                 >

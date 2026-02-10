@@ -1,16 +1,18 @@
 import { useApi } from '../hooks/useApi'
-import type { TabId, PassiveSkill, ActiveSkill, HooksData, SummonType } from '../types'
+import type { TabId, PassiveSkill, ActiveSkill, HooksData, SummonType, Recipe, Chain } from '../types'
 
 interface TabNavProps {
   activeTab: TabId
   onTabChange: (tab: TabId) => void
 }
 
-const TABS: { id: TabId; icon: string; label: string; apiUrl: string }[] = [
-  { id: 'passive', icon: '📕', label: '패시브 스킬', apiUrl: '/api/skills' },
-  { id: 'active', icon: '⚔️', label: '액티브 스킬', apiUrl: '/api/commands' },
-  { id: 'summons', icon: '🐲', label: '소환수', apiUrl: '/api/agents/types' },
-  { id: 'enchants', icon: '🔮', label: '인챈트', apiUrl: '/api/hooks' },
+const TABS: { id: TabId; icon: string; label: string }[] = [
+  { id: 'passive', icon: '📕', label: '패시브 스킬' },
+  { id: 'active', icon: '⚔️', label: '액티브 스킬' },
+  { id: 'summons', icon: '🐲', label: '소환수' },
+  { id: 'enchants', icon: '🔮', label: '인챈트' },
+  { id: 'library', icon: '🏪', label: '스킬 상점' },
+  { id: 'chains', icon: '🔗', label: '콤보' },
 ]
 
 export function TabNav({ activeTab, onTabChange }: TabNavProps) {
@@ -18,6 +20,8 @@ export function TabNav({ activeTab, onTabChange }: TabNavProps) {
   const { data: commands } = useApi<ActiveSkill[]>('/api/commands')
   const { data: agents } = useApi<SummonType[]>('/api/agents/types')
   const { data: hooks } = useApi<HooksData>('/api/hooks')
+  const { data: recipes } = useApi<Recipe[]>('/api/library')
+  const { data: chains } = useApi<Chain[]>('/api/chains')
 
   const getCounts = (id: TabId): number => {
     switch (id) {
@@ -25,6 +29,8 @@ export function TabNav({ activeTab, onTabChange }: TabNavProps) {
       case 'active': return commands?.length ?? 0
       case 'summons': return agents?.length ?? 0
       case 'enchants': return hooks ? Object.keys(hooks).length : 0
+      case 'library': return recipes?.length ?? 0
+      case 'chains': return chains?.length ?? 0
       default: return 0
     }
   }

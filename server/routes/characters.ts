@@ -302,6 +302,37 @@ charactersRouter.delete('/favorites/:id', async (req, res) => {
 })
 
 // =============================
+// 단일 캐릭터 조회 (URL 직접 접근 지원)
+// 주의: 반드시 다른 라우트들 아래에 배치 (/:id가 /servers, /favorites 등을 잡지 않도록)
+// =============================
+
+charactersRouter.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    if (id === 'global') {
+      const globalChar = await buildGlobalCharacter()
+      return res.json(globalChar)
+    }
+
+    // base64url → 프로젝트 경로
+    const projectPath = Buffer.from(id, 'base64url').toString('utf-8')
+    const claudeDir = path.join(projectPath, '.claude')
+    const settingsLocal = path.join(claudeDir, 'settings.local.json')
+
+    if (!await fs.pathExists(projectPath)) {
+      return res.status(404).json({ error: 'Project path not found' })
+    }
+
+    const name = path.basename(projectPath)
+    const char = await buildCharacter(projectPath, name, claudeDir, settingsLocal)
+    res.json(char)
+  } catch (err) {
+    res.status(500).json({ error: String(err) })
+  }
+})
+
+// =============================
 // 헬퍼 함수
 // =============================
 
@@ -390,38 +421,21 @@ async function buildCharacter(
 }
 
 function buildRpgHooks() {
+  // stdin JSON을 그대로 서버로 전달하는 hook 스크립트 경로
+  const scriptPath = path.resolve(__dirname, '..', 'hooks', 'rpg-hook.sh')
+  const hookEntry = { type: 'command', command: scriptPath, timeout: 5 }
+  const rule = { matcher: '', hooks: [hookEntry] }
+
   return {
-    PreToolUse: [{
-      matcher: '',
-      hooks: [{
-        type: 'command',
-        command: "curl -s http://localhost:3333/api/events -X POST -H 'Content-Type: application/json' -d '{\"type\":\"pre_tool\",\"tool\":\"'\"$CLAUDE_TOOL_NAME\"'\"}'",
-        timeout: 3,
-      }],
-    }],
-    PostToolUse: [{
-      matcher: '',
-      hooks: [{
-        type: 'command',
-        command: "curl -s http://localhost:3333/api/events -X POST -H 'Content-Type: application/json' -d '{\"type\":\"post_tool\",\"tool\":\"'\"$CLAUDE_TOOL_NAME\"'\"}'",
-        timeout: 3,
-      }],
-    }],
-    Stop: [{
-      matcher: '',
-      hooks: [{
-        type: 'command',
-        command: "curl -s http://localhost:3333/api/events -X POST -H 'Content-Type: application/json' -d '{\"type\":\"stop\"}'",
-        timeout: 3,
-      }],
-    }],
-    UserPromptSubmit: [{
-      matcher: '',
-      hooks: [{
-        type: 'command',
-        command: "curl -s http://localhost:3333/api/events -X POST -H 'Content-Type: application/json' -d '{\"type\":\"user_prompt\"}'",
-        timeout: 3,
-      }],
-    }],
+    PreToolUse: [{ ...rule }],
+    PostToolUse: [{ ...rule }],
+    PostToolUseFailure: [{ ...rule }],
+    Stop: [{ ...rule }],
+    UserPromptSubmit: [{ ...rule }],
+    SubagentStart: [{ ...rule }],
+    SubagentStop: [{ ...rule }],
+    Notification: [{ ...rule }],
+    SessionStart: [{ ...rule }],
+    SessionEnd: [{ ...rule }],
   }
 }
