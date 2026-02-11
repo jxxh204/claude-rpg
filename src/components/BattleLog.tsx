@@ -121,7 +121,7 @@ export function BattleLog({ events, activeSession }: BattleLogProps) {
   return (
     <aside className="rpg-battle-log">
       <div className="rpg-battle-log__header">
-        {'📜'} 전투 로그
+        {'📜'} 활동 로그 Activity
       </div>
 
       {/* 활성 세션 배너 */}
@@ -134,9 +134,9 @@ export function BattleLog({ events, activeSession }: BattleLogProps) {
         {([
           ['all', '전체'],
           ['tools', '⚔️도구'],
-          ['agents', '🐲소환'],
+          ['agents', '🐲에이전트'],
           ['session', '⚡세션'],
-          ['chains', '🔗콤보'],
+          ['chains', '🔗체인'],
         ] as [FilterType, string][]).map(([key, label]) => (
           <button
             key={key}
@@ -153,7 +153,7 @@ export function BattleLog({ events, activeSession }: BattleLogProps) {
         {filteredEvents.length === 0 ? (
           <div className="empty-state" style={{ padding: '40px 16px' }}>
             <div className="empty-state__icon">{'📜'}</div>
-            <div className="empty-state__text">전투 기록이 없습니다</div>
+            <div className="empty-state__text">활동 기록이 없습니다</div>
             <div className="empty-state__sub">Claude가 작업을 시작하면 여기에 로그가 표시됩니다</div>
           </div>
         ) : (
@@ -220,7 +220,7 @@ export function BattleLog({ events, activeSession }: BattleLogProps) {
                           {last.sessionSummary && (
                             <span className="log-session__summary">
                               {' '}(도구 {last.sessionSummary.toolCount}회
-                              {last.sessionSummary.agentCount > 0 && `, 소환 ${last.sessionSummary.agentCount}회`}
+                              {last.sessionSummary.agentCount > 0 && `, 에이전트 ${last.sessionSummary.agentCount}회`}
                               , {formatDuration(last.sessionSummary.durationMs)})
                             </span>
                           )}
@@ -304,7 +304,7 @@ function LiveSessionBanner({ session }: { session: Session }) {
       <span className="battle-log__live-dot" />
       <span className="battle-log__live-text">
         LIVE — 도구 {toolCount}회
-        {session.agentSpawns.length > 0 && `, 소환 ${session.agentSpawns.length}회`}
+        {session.agentSpawns.length > 0 && `, 에이전트 ${session.agentSpawns.length}회`}
         , {formatElapsed(elapsed)}
       </span>
     </div>

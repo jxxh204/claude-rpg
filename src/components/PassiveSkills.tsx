@@ -9,7 +9,7 @@ export function PassiveSkills() {
   const [editSkill, setEditSkill] = useState<PassiveSkill | null>(null)
 
   const handleDelete = async (name: string) => {
-    if (!confirm(`패시브 스킬 "${name}"을(를) 분해하시겠습니까?`)) return
+    if (!confirm(`Skill "${name}"을(를) 삭제하시겠습니까?`)) return
     await fetch(`/api/skills/${name}`, { method: 'DELETE' })
     refetch()
   }
@@ -17,14 +17,14 @@ export function PassiveSkills() {
   return (
     <div>
       <div className="panel-title">
-        {'📕'} 패시브 스킬
+        {'📕'} 스킬북 Skills
         <button className="rpg-btn rpg-btn--primary" onClick={() => setShowCreate(true)}>
-          + 새 스킬 습득
+          + 새 Skill 등록
         </button>
       </div>
 
       {/* 장착 슬롯 */}
-      <div className="section-divider">{'🔒'} 장착 슬롯</div>
+      <div className="section-divider">{'🔒'} 활성 슬롯 (.claude/skills/)</div>
       <div className="slot-grid">
         {skills?.slice(0, 6).map((skill, i) => (
           <motion.div
@@ -48,7 +48,7 @@ export function PassiveSkills() {
       </div>
 
       {/* 보유 스킬 목록 */}
-      <div className="section-divider">{'📜'} 보유 스킬 목록</div>
+      <div className="section-divider">{'📜'} 등록된 Skills</div>
       {loading ? (
         <div className="empty-state">
           <div className="empty-state__icon">{'⏳'}</div>
@@ -57,7 +57,7 @@ export function PassiveSkills() {
       ) : !skills?.length ? (
         <div className="empty-state">
           <div className="empty-state__icon">{'📕'}</div>
-          <div className="empty-state__text">습득한 패시브 스킬이 없습니다</div>
+          <div className="empty-state__text">등록된 Skill이 없습니다</div>
           <div className="empty-state__sub">~/.claude/skills/ 에 스킬을 추가하세요</div>
         </div>
       ) : (
@@ -76,7 +76,7 @@ export function PassiveSkills() {
                   <div className="item-card__icon item-card__icon--passive">{'📕'}</div>
                   <div>
                     <div className="item-card__name">{skill.name}</div>
-                    <div className="item-card__scope">PASSIVE</div>
+                    <div className="item-card__scope">SKILL</div>
                   </div>
                 </div>
                 <div className="item-card__desc">{skill.description}</div>
@@ -87,7 +87,7 @@ export function PassiveSkills() {
                 </div>
                 <div className="item-card__actions">
                   <button className="rpg-btn" onClick={() => setEditSkill(skill)}>편집</button>
-                  <button className="rpg-btn rpg-btn--danger" onClick={() => handleDelete(skill.name)}>분해</button>
+                  <button className="rpg-btn rpg-btn--danger" onClick={() => handleDelete(skill.name)}>삭제</button>
                 </div>
               </motion.div>
             ))}
@@ -161,7 +161,7 @@ function SkillModal({
         onClick={e => e.stopPropagation()}
       >
         <div className="modal__title">
-          {isEdit ? '패시브 스킬 강화' : '새 패시브 스킬 습득'}
+          {isEdit ? 'Skill 수정' : '새 Skill 등록'}
         </div>
 
         <div className="modal__field">
@@ -208,7 +208,7 @@ function SkillModal({
         <div className="modal__actions">
           <button className="rpg-btn" onClick={onClose}>취소</button>
           <button className="rpg-btn rpg-btn--primary" onClick={handleSubmit}>
-            {isEdit ? '강화 완료' : '스킬 습득'}
+            {isEdit ? '저장' : '등록'}
           </button>
         </div>
       </motion.div>

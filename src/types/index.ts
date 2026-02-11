@@ -51,16 +51,16 @@ export type HooksData = Record<string, HookRule[]>
 
 // Hook 이벤트 타입과 RPG 매핑
 export const HOOK_EVENT_TYPES = {
-  PreToolUse: { rpgName: '공격 전 발동', icon: 'shield', color: '#ff6b6b' },
-  PostToolUse: { rpgName: '공격 후 발동', icon: 'sword', color: '#4ecdc4' },
-  PostToolUseFailure: { rpgName: '공격 실패 시', icon: 'fail', color: '#e74c3c' },
-  Stop: { rpgName: '전투 종료 시', icon: 'skull', color: '#95a5a6' },
-  Notification: { rpgName: '알림 이벤트', icon: 'bell', color: '#f39c12' },
-  UserPromptSubmit: { rpgName: '명령 입력 시', icon: 'scroll', color: '#9b59b6' },
-  SubagentStart: { rpgName: '소환 시', icon: 'summon', color: '#3498db' },
-  SubagentStop: { rpgName: '소환 해제 시', icon: 'vanish', color: '#2980b9' },
-  SessionStart: { rpgName: '세션 시작', icon: 'castle', color: '#27ae60' },
-  SessionEnd: { rpgName: '세션 종료', icon: 'door', color: '#7f8c8d' },
+  PreToolUse: { rpgName: '도구 사용 전 (PreToolUse)', icon: 'shield', color: '#ff6b6b' },
+  PostToolUse: { rpgName: '도구 사용 후 (PostToolUse)', icon: 'sword', color: '#4ecdc4' },
+  PostToolUseFailure: { rpgName: '도구 실패 시 (Failure)', icon: 'fail', color: '#e74c3c' },
+  Stop: { rpgName: '응답 완료 시 (Stop)', icon: 'skull', color: '#95a5a6' },
+  Notification: { rpgName: '알림 (Notification)', icon: 'bell', color: '#f39c12' },
+  UserPromptSubmit: { rpgName: '프롬프트 입력 시 (Submit)', icon: 'scroll', color: '#9b59b6' },
+  SubagentStart: { rpgName: '에이전트 소환 시 (Spawn)', icon: 'summon', color: '#3498db' },
+  SubagentStop: { rpgName: '에이전트 해제 시 (Despawn)', icon: 'vanish', color: '#2980b9' },
+  SessionStart: { rpgName: '세션 시작 (Start)', icon: 'castle', color: '#27ae60' },
+  SessionEnd: { rpgName: '세션 종료 (End)', icon: 'door', color: '#7f8c8d' },
 } as const
 
 // === 전투 로그 ===

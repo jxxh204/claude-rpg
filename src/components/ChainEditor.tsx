@@ -9,8 +9,8 @@ const STEP_TYPE_META: Record<ChainStepType, {
   icon: string; label: string; color: string; description: string
 }> = {
   hook_trigger: {
-    icon: '⚡', label: '트리거', color: '#f1c40f',
-    description: 'Claude Code 이벤트(도구 사용, 세션 시작 등)를 감지하여 콤보를 시작합니다. 반드시 첫 번째 단계여야 합니다.',
+    icon: '⚡', label: '트리거 Hook', color: '#f1c40f',
+    description: 'Claude Code 이벤트(도구 사용, 세션 시작 등)를 감지하여 Chain을 시작합니다. 반드시 첫 번째 단계여야 합니다.',
   },
   command: {
     icon: '⚔️', label: '커맨드', color: '#e74c3c',
@@ -21,7 +21,7 @@ const STEP_TYPE_META: Record<ChainStepType, {
     description: '스킬(SKILL.md)을 참조합니다. ~/.claude/skills/ 에 설치된 스킬을 연결합니다.',
   },
   agent_spawn: {
-    icon: '🐲', label: '소환', color: '#1abc9c',
+    icon: '🐲', label: '에이전트 Agent', color: '#1abc9c',
     description: '서브에이전트(Bash, Explore 등)를 소환합니다. 자동화된 작업 수행에 활용됩니다.',
   },
   condition: {
@@ -103,7 +103,7 @@ export function ChainEditor() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('이 콤보를 삭제하시겠습니까?')) return
+    if (!confirm('이 Chain을 삭제하시겠습니까?')) return
     await fetch(`/api/chains/${id}`, { method: 'DELETE' })
     refetch()
   }
@@ -120,16 +120,16 @@ export function ChainEditor() {
   return (
     <div>
       <div className="panel-title">
-        {'🔗'} 콤보 시스템
+        {'🔗'} 체인 Chains
         <button className="rpg-btn rpg-btn--primary" onClick={handleCreate}>
-          + 새 콤보
+          + 새 Chain
         </button>
       </div>
 
       {/* 콤보 템플릿 */}
       {templates && templates.length > 0 && (
         <>
-          <div className="section-divider">{'📖'} 콤보 레시피</div>
+          <div className="section-divider">{'📖'} 체인 템플릿 (Templates)</div>
           <div className="chain-templates">
             {templates.map((tpl, i) => (
               <motion.div
@@ -155,7 +155,7 @@ export function ChainEditor() {
       {/* 활성 콤보 */}
       {activeChains.length > 0 && (
         <>
-          <div className="section-divider">{'⚡'} 활성 콤보</div>
+          <div className="section-divider">{'⚡'} 활성 Chains</div>
           <div className="card-grid">
             {activeChains.map((chain, i) => (
               <ChainCard
@@ -172,7 +172,7 @@ export function ChainEditor() {
       )}
 
       {/* 비활성/전체 콤보 */}
-      <div className="section-divider">{'📜'} {activeChains.length > 0 ? '보유 콤보' : '전체 콤보'}</div>
+      <div className="section-divider">{'📜'} {activeChains.length > 0 ? '보유 Chains' : '전체 Chains'}</div>
       {loading ? (
         <div className="empty-state">
           <div className="empty-state__icon">{'⏳'}</div>
@@ -181,8 +181,8 @@ export function ChainEditor() {
       ) : !chains?.length ? (
         <div className="empty-state">
           <div className="empty-state__icon">{'🔗'}</div>
-          <div className="empty-state__text">보유한 콤보가 없습니다</div>
-          <div className="empty-state__sub">위 레시피에서 콤보를 생성하거나 새로 만드세요</div>
+          <div className="empty-state__text">등록된 Chain이 없습니다</div>
+          <div className="empty-state__sub">위 템플릿에서 Chain을 생성하거나 새로 만드세요</div>
         </div>
       ) : (
         <div className="card-grid">
@@ -257,7 +257,7 @@ function ChainCard({
           <div className="item-card__name">{chain.name}</div>
           <div className="item-card__scope">
             {chain.enabled ? '🟢 활성' : '⚫ 비활성'}
-            {chain.triggerCount > 0 && ` · 발동 ${chain.triggerCount}회`}
+            {chain.triggerCount > 0 && ` · 트리거 ${chain.triggerCount}회`}
           </div>
         </div>
         {/* 토글 스위치 */}
@@ -277,7 +277,7 @@ function ChainCard({
       {/* 통계 */}
       <div className="chain-card__stats">
         {chain.lastTriggeredAt && (
-          <span className="chain-card__stat">마지막 발동: {formatTime(chain.lastTriggeredAt)}</span>
+          <span className="chain-card__stat">마지막 트리거: {formatTime(chain.lastTriggeredAt)}</span>
         )}
       </div>
 
@@ -385,7 +385,7 @@ function ChainEditModal({
   }
 
   const handleSubmit = () => {
-    if (!name.trim()) return alert('콤보 이름을 입력하세요')
+    if (!name.trim()) return alert('Chain 이름을 입력하세요')
     if (steps.length === 0) return alert('최소 1개의 단계가 필요합니다')
 
     onSave({
@@ -413,7 +413,7 @@ function ChainEditModal({
         onClick={e => e.stopPropagation()}
       >
         <div className="modal__title">
-          {isNew ? '🔗 새 콤보 생성' : '🔗 콤보 편집'}
+          {isNew ? '🔗 새 Chain 생성' : '🔗 Chain 편집'}
         </div>
 
         {/* 기본 정보 */}
@@ -433,12 +433,12 @@ function ChainEditModal({
             </select>
           </div>
           <div className="modal__field" style={{ flex: 1 }}>
-            <label className="modal__label">콤보 이름</label>
+            <label className="modal__label">Chain 이름</label>
             <input
               className="modal__input"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="코드 리뷰 콤보"
+              placeholder="코드 리뷰 Chain"
             />
           </div>
         </div>
@@ -449,7 +449,7 @@ function ChainEditModal({
             className="modal__input chain-desc-textarea"
             value={description}
             onChange={e => setDescription(e.target.value)}
-            placeholder="이 콤보가 하는 일을 설명하세요 (예: 코드 수정 후 자동으로 린트 → 테스트 → 리뷰를 실행합니다)"
+            placeholder="이 Chain이 하는 일을 설명하세요 (예: 코드 수정 후 자동으로 린트 → 테스트 → 리뷰를 실행합니다)"
             rows={2}
           />
         </div>
@@ -457,7 +457,7 @@ function ChainEditModal({
         {/* 단계 빌더 */}
         <div className="section-divider">{'⚙️'} 단계 구성</div>
         <p className="chain-steps-guide">
-          트리거(이벤트 감지) → 동작(커맨드/스킬/소환) 순으로 단계를 구성하세요. 각 단계 위에 마우스를 올리면 설명을 볼 수 있습니다.
+          트리거(이벤트 감지) → 동작(커맨드/스킬/에이전트) 순으로 단계를 구성하세요. 각 단계 위에 마우스를 올리면 설명을 볼 수 있습니다.
         </p>
         <div className="chain-steps-builder">
           {steps.map((step, idx) => (
@@ -489,7 +489,7 @@ function ChainEditModal({
         <div className="modal__actions">
           <button className="rpg-btn" onClick={onClose}>취소</button>
           <button className="rpg-btn rpg-btn--primary" onClick={handleSubmit}>
-            {isNew ? '콤보 생성' : '저장'}
+            {isNew ? 'Chain 생성' : '저장'}
           </button>
         </div>
       </motion.div>
@@ -506,7 +506,7 @@ const STEP_FIELD_HINTS: Record<ChainStepType, string> = {
   hook_trigger: '어떤 이벤트에 반응할지 선택하고, 필요시 매처 패턴을 지정하세요.',
   command: '실행할 슬래시 커맨드 이름을 입력하세요. (~/.claude/commands/ 디렉토리 참조)',
   skill_ref: '참조할 스킬 디렉토리 이름을 입력하세요. (~/.claude/skills/ 디렉토리 참조)',
-  agent_spawn: '소환할 에이전트 타입을 입력하세요. (Bash, Explore, Plan 등)',
+  agent_spawn: '실행할 에이전트(Agent) 타입을 입력하세요. (Bash, Explore, Plan 등)',
   condition: '조건을 설정하여 이후 단계의 실행 여부를 제어합니다.',
 }
 

@@ -74,7 +74,7 @@ export function SkillLibrary() {
   return (
     <div>
       <div className="panel-title">
-        {'🏪'} 스킬 상점
+        {'🏪'} 상점 Library
       </div>
 
       {/* 필터 바 */}

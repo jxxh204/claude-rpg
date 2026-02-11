@@ -26,13 +26,13 @@ export function Summons() {
 
   return (
     <div>
-      <div className="panel-title">{'🐲'} 소환수</div>
+      <div className="panel-title">{'🐲'} 에이전트 Agents</div>
 
       {/* 활성 소환수 */}
-      <div className="section-divider">{'⚡'} 활성 소환수</div>
+      <div className="section-divider">{'⚡'} 실행 중 (Running Tasks)</div>
       {!active?.length ? (
         <div className="empty-state" style={{ padding: '24px' }}>
-          <div className="empty-state__text">현재 소환된 소환수가 없습니다</div>
+          <div className="empty-state__text">현재 실행 중인 에이전트가 없습니다</div>
           <div className="empty-state__sub">Claude가 Task를 실행하면 여기에 나타납니다</div>
         </div>
       ) : (
@@ -69,7 +69,7 @@ export function Summons() {
       )}
 
       {/* 소환수 도감 */}
-      <div className="section-divider">{'📖'} 소환수 도감</div>
+      <div className="section-divider">{'📖'} 에이전트 도감 (SubAgents)</div>
       <div className="bestiary-grid">
         {types?.map((type, i) => (
           <motion.div
@@ -132,7 +132,7 @@ export function Summons() {
               <div className="modal__field">
                 <label className="modal__label">타입</label>
                 <div style={{ color: 'var(--text-dim)', fontSize: '13px' }}>
-                  {selectedType.scope === 'builtin' ? '내장 소환수' : '커스텀 소환수'}
+                  {selectedType.scope === 'builtin' ? '내장 Agent (Built-in)' : '커스텀 Agent'}
                 </div>
               </div>
 

@@ -37,14 +37,14 @@ export function Enchants() {
   ])
 
   const handleDelete = async (eventType: string, index: number) => {
-    if (!confirm('이 인챈트를 해제하시겠습니까?')) return
+    if (!confirm('이 Hook을 해제하시겠습니까?')) return
     await fetch(`/api/hooks/${eventType}/${index}`, { method: 'DELETE' })
     refetch()
   }
 
   return (
     <div>
-      <div className="panel-title">{'🔮'} 인챈트 / 룬 시스템</div>
+      <div className="panel-title">{'🔮'} 인챈트 Hooks</div>
 
       {loading ? (
         <div className="empty-state">
@@ -77,13 +77,13 @@ export function Enchants() {
                   style={{ marginLeft: 'auto', fontSize: '11px', padding: '3px 10px' }}
                   onClick={() => setShowCreate(eventType)}
                 >
-                  + 룬 각인
+                  + Hook 등록
                 </button>
               </div>
 
               {rules.length === 0 ? (
                 <div style={{ fontSize: '12px', color: 'var(--text-dim)', padding: '8px 0' }}>
-                  장착된 룬이 없습니다
+                  등록된 Hook이 없습니다
                 </div>
               ) : (
                 <AnimatePresence>
@@ -176,7 +176,7 @@ function EnchantModal({
         onClick={e => e.stopPropagation()}
       >
         <div className="modal__title">
-          {EVENT_ICONS[eventType] || '🔮'} {eventType}에 룬 각인
+          {EVENT_ICONS[eventType] || '🔮'} {eventType}에 Hook 등록
         </div>
 
         <div className="modal__field">
@@ -214,7 +214,7 @@ function EnchantModal({
         <div className="modal__actions">
           <button className="rpg-btn" onClick={onClose}>취소</button>
           <button className="rpg-btn rpg-btn--primary" onClick={handleSubmit}>
-            {'🔮'} 룬 각인
+            {'🔮'} Hook 등록
           </button>
         </div>
       </motion.div>

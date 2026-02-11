@@ -14,7 +14,7 @@ export function QuickSlotBar() {
       ))}
       {(!commands || commands.length === 0) && (
         <div style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
-          {'⚔️'} 액티브 스킬을 습득하면 퀵슬롯에 등록됩니다
+          {'⚔️'} Command를 등록하면 퀵슬롯에 추가됩니다
         </div>
       )}
     </div>

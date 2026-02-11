@@ -7,12 +7,12 @@ interface TabNavProps {
 }
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
-  { id: 'passive', icon: '📕', label: '패시브 스킬' },
-  { id: 'active', icon: '⚔️', label: '액티브 스킬' },
-  { id: 'summons', icon: '🐲', label: '소환수' },
-  { id: 'enchants', icon: '🔮', label: '인챈트' },
-  { id: 'library', icon: '🏪', label: '스킬 상점' },
-  { id: 'chains', icon: '🔗', label: '콤보' },
+  { id: 'passive', icon: '📕', label: '스킬북 Skills' },
+  { id: 'active', icon: '⚔️', label: '커맨드 Commands' },
+  { id: 'summons', icon: '🐲', label: '에이전트 Agents' },
+  { id: 'enchants', icon: '🔮', label: '인챈트 Hooks' },
+  { id: 'library', icon: '🏪', label: '상점 Library' },
+  { id: 'chains', icon: '🔗', label: '체인 Chains' },
 ]
 
 export function TabNav({ activeTab, onTabChange }: TabNavProps) {

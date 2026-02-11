@@ -118,10 +118,10 @@ export function CharCard({
       {stats && stats.totalSessions > 0 && (
         <div className="char-card__mini-stats">
           <span title="총 세션">🗡️ {stats.totalSessions}</span>
-          <span title="총 도구">⚔️ {stats.totalToolUses}</span>
-          <span title="총 소환">🐲 {stats.totalAgentSpawns}</span>
+          <span title="총 도구 (Tool Uses)">⚔️ {stats.totalToolUses}</span>
+          <span title="총 에이전트 (Spawns)">🐲 {stats.totalAgentSpawns}</span>
           {(stats as any).totalChainTriggers > 0 && (
-            <span title="총 콤보">🔗 {(stats as any).totalChainTriggers}</span>
+            <span title="총 체인 (Triggers)">🔗 {(stats as any).totalChainTriggers}</span>
           )}
         </div>
       )}

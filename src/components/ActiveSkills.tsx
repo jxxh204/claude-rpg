@@ -10,7 +10,7 @@ export function ActiveSkills() {
   const [casting, setCasting] = useState<string | null>(null)
 
   const handleDelete = async (name: string) => {
-    if (!confirm(`액티브 스킬 "/${name}"을(를) 분해하시겠습니까?`)) return
+    if (!confirm(`Command "/${name}"을(를) 삭제하시겠습니까?`)) return
     await fetch(`/api/commands/${name}`, { method: 'DELETE' })
     refetch()
   }
@@ -23,14 +23,14 @@ export function ActiveSkills() {
   return (
     <div>
       <div className="panel-title">
-        {'⚔️'} 액티브 스킬
+        {'⚔️'} 커맨드 Commands
         <button className="rpg-btn rpg-btn--primary" onClick={() => setShowCreate(true)}>
-          + 새 스킬 습득
+          + 새 Command 등록
         </button>
       </div>
 
       {/* 퀵슬롯 미리보기 */}
-      <div className="section-divider">{'🎯'} 퀵슬롯</div>
+      <div className="section-divider">{'🎯'} 퀵슬롯 (Slash Commands)</div>
       <div className="slot-grid">
         {commands?.slice(0, 8).map((cmd, i) => (
           <motion.div
@@ -49,7 +49,7 @@ export function ActiveSkills() {
       </div>
 
       {/* 스킬 목록 */}
-      <div className="section-divider">{'📜'} 전역 스킬 (~/.claude/commands/)</div>
+      <div className="section-divider">{'📜'} 등록된 Commands (~/.claude/commands/)</div>
       {loading ? (
         <div className="empty-state">
           <div className="empty-state__icon">{'⏳'}</div>
@@ -58,7 +58,7 @@ export function ActiveSkills() {
       ) : !commands?.length ? (
         <div className="empty-state">
           <div className="empty-state__icon">{'⚔️'}</div>
-          <div className="empty-state__text">습득한 액티브 스킬이 없습니다</div>
+          <div className="empty-state__text">등록된 Command가 없습니다</div>
           <div className="empty-state__sub">~/.claude/commands/ 에 커맨드를 추가하세요</div>
         </div>
       ) : (
@@ -86,10 +86,10 @@ export function ActiveSkills() {
                     className="rpg-btn rpg-btn--cast"
                     onClick={() => handleCast(cmd.name)}
                   >
-                    {'🎯'} 발동
+                    {'🎯'} 실행
                   </button>
                   <button className="rpg-btn" onClick={() => setEditCmd(cmd)}>편집</button>
-                  <button className="rpg-btn rpg-btn--danger" onClick={() => handleDelete(cmd.name)}>분해</button>
+                  <button className="rpg-btn rpg-btn--danger" onClick={() => handleDelete(cmd.name)}>삭제</button>
                 </div>
 
                 {/* 시전 이펙트 */}
@@ -181,7 +181,7 @@ function CommandModal({
         onClick={e => e.stopPropagation()}
       >
         <div className="modal__title">
-          {isEdit ? '액티브 스킬 강화' : '새 액티브 스킬 습득'}
+          {isEdit ? 'Command 수정' : '새 Command 등록'}
         </div>
 
         <div className="modal__field">
@@ -228,7 +228,7 @@ function CommandModal({
         <div className="modal__actions">
           <button className="rpg-btn" onClick={onClose}>취소</button>
           <button className="rpg-btn rpg-btn--primary" onClick={handleSubmit}>
-            {isEdit ? '강화 완료' : '스킬 습득'}
+            {isEdit ? '저장' : '등록'}
           </button>
         </div>
       </motion.div>
